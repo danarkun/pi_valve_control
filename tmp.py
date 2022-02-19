@@ -43,10 +43,13 @@ class ControlPanel:
         self.status.config(bg= "green" if self.statusBool else "red")
         print(self.statusBool)
 
-gui = Tk()
-app = MainApp(gui)
-gui.title("Valve Control")
-# set window size
-gui.geometry("480x320")
+def main():
+    gui = Tk()
+    app = MainApp(gui)
+    gui.title("Valve Control")
+    # set window size
+    gui.geometry("480x320")
+    gui.mainloop()
 
-gui.mainloop()
+if __name__ == "__main__":
+    main()
