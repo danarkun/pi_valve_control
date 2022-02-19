@@ -1,8 +1,23 @@
 from tkinter import *
 from turtle import width
 
-gui = Tk()
-class Demo1:
+class MainApp(Frame):
+    def __init__(self, master):
+        self.master = master
+        self.frame1 = Frame(self.master)
+        self.frame2 = Frame(self.master)
+        self.frame3 = Frame(self.master)
+
+        self.cp1 = ControlPanel(self.frame1, "One")
+        self.frame1.grid(row=0, column=0, padx=20)
+
+        self.cp2 = ControlPanel(self.frame2, "Two")
+        self.frame2.grid(row=0, column=1, padx=80)
+
+        self.cp3 = ControlPanel(self.frame3, "Three")
+        self.frame3.grid(row=0, column=2, padx=20)
+
+class ControlPanel:
     def __init__(self, master, label):
         self.statusBool = False
         self.master = master
@@ -28,28 +43,10 @@ class Demo1:
         self.status.config(bg= "green" if self.statusBool else "red")
         print(self.statusBool)
 
-app = Demo1(gui, "One")
+gui = Tk()
+app = MainApp(gui)
 gui.title("Valve Control")
 # set window size
 gui.geometry("480x320")
-
-# f1 = Frame(gui)
-# f1.pack()
-
-# l1 = Label(f1, text = "First")
-# l2 = Label(f1, text = "Second")
-# l3 = Label(f1, text = "Third")
-
-# l1.grid(row = 0, column = 0)
-# l2.grid(row = 0, column = 1, padx = 160)
-# l3.grid(row = 0, column = 2, padx = 0)
-
-# entry widgets, used to take entry from user
-# e1 = Entry(gui)
-# e2 = Entry(gui)
-  
-# # this will arrange entry widgets
-# e1.grid(row = 0, column = 1, pady = 2)
-# e2.grid(row = 1, column = 1, pady = 2)
 
 gui.mainloop()
