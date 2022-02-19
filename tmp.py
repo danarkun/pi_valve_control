@@ -26,19 +26,21 @@ class ControlPanel:
 
         # Label
         self.text = Label(self.frame, text = label)
-        self.text.pack()
+        self.text.grid(row=0, column=0, pady=10)
 
         # Toggle Button
         self.button = Button(self.frame, text = "Toggle", command=self.toggleStatus)
-        self.button.pack()
+        self.button.grid(row=1, column=0, pady=10)
 
         # Status
         self.status = Label(self.frame, bg="red", width=10)
-        self.status.pack()
+        self.status.grid(row=2, column=0, pady=20)
 
         self.frame.pack()
     
     def toggleStatus(self):
+
+
         self.statusBool = not self.statusBool
         self.status.config(bg= "green" if self.statusBool else "red")
         print(self.statusBool)
