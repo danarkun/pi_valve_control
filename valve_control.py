@@ -39,8 +39,6 @@ class ControlPanel:
         self.frame.pack()
     
     def toggleStatus(self):
-
-
         self.statusBool = not self.statusBool
         self.status.config(bg= "green" if self.statusBool else "red")
         print(self.statusBool)
