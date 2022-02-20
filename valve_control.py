@@ -18,10 +18,11 @@ class MainApp(Frame):
         self.frame3.grid(row=0, column=2, padx=20)
 
 class ControlPanel:
-    def __init__(self, master, label):
+    def __init__(self, master, label, gpio):
         self.statusBool = False
         self.master = master
         self.label = label
+        self.gpio = gpio
         self.frame = Frame(self.master)
 
         # Label
@@ -41,6 +42,7 @@ class ControlPanel:
     def toggleStatus(self):
         self.statusBool = not self.statusBool
         self.status.config(bg= "green" if self.statusBool else "red")
+        # GPIO.output(self.gpio, self.statusBool)
         print(self.statusBool)
 
 def main():
