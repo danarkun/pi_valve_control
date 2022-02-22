@@ -29,7 +29,7 @@ class MainApp(Frame):
         ctl3Frame.grid(row=1, column=2)
 
         pwr = PowerPanel(pwrFrame, [cp1, cp2, cp3])
-        pwrFrame.grid(row=0, column=1)
+        pwrFrame.grid(row=0, column=1, pady=20)
 
         master.columnconfigure(0, weight=1)
         master.columnconfigure(1, weight=1)
@@ -44,15 +44,15 @@ class PowerPanel:
 
         # Label
         self.text = Label(self.frame, text = "Pump Power")
-        self.text.grid(row=0, column=0)
+        self.text.grid(row=0, column=0, pady=10)
 
         # Toggle Button
         self.button = Button(self.frame, text = "Toggle", command=self.toggleStatus)
-        self.button.grid(row=1, column=0)
+        self.button.grid(row=1, column=0, pady=10)
 
         # Status
         self.status = Label(self.frame, bg="red", width=10)
-        self.status.grid(row=2, column=0)
+        self.status.grid(row=2, column=0, pady=10)
 
         self.frame.pack()
 
@@ -65,6 +65,8 @@ class PowerPanel:
         # Foreach control panel, disable toggle button depending on power
         for ctl in self.controlPanels:
             ctl.button.configure(state="active" if self.statusBool else "disabled")
+            # When toggling power, always turn control panels off
+            ctl.toggleStatus(False)
 
 class ControlPanel:
     def __init__(self, master, gpio):
@@ -76,20 +78,20 @@ class ControlPanel:
 
         # Label
         self.text = Label(self.frame, text = gpio)
-        self.text.grid(row=0, column=0)
-
-        # Toggle Button
-        self.button = Button(self.frame, text = "Toggle", command=self.toggleStatus, state="disabled")
-        self.button.grid(row=1, column=0)
+        self.text.grid(row=0, column=0, pady=10)
 
         # Status
         self.status = Label(self.frame, bg="red", width=10)
-        self.status.grid(row=2, column=0)
+        self.status.grid(row=2, column=0, pady=10)
+
+        # Toggle Button
+        self.button = Button(self.frame, text = "Toggle", command=lambda : self.toggleStatus(not self.statusBool), state="disabled")
+        self.button.grid(row=1, column=0, pady=10)
 
         self.frame.pack()
     
-    def toggleStatus(self):
-        self.statusBool = not self.statusBool
+    def toggleStatus(self, newStatus):
+        self.statusBool = newStatus
         self.status.config(bg= "green" if self.statusBool else "red")
         # GPIO.output(self.gpio, self.statusBool)
         print(f'GPIO{self.gpio} is: {self.statusBool}')
