@@ -2,6 +2,10 @@ from tkinter import *
 from turtle import width
 # import RPi.GPIO as GPIO
 
+VALVE1 = "VALVE 1"
+VALVE2 = "VALVE 1"
+VALVE3 = "VALVE 3"
+
 GPIO_VALVE1 = 20
 GPIO_VALVE2 = 21
 GPIO_VALVE3 = 26
@@ -21,13 +25,13 @@ class MainApp(Frame):
         ctl3Frame = Frame(self.master)
         pwrFrame = Frame(self.master)
 
-        cp1 = ControlPanel(ctl1Frame, GPIO_VALVE1)
+        cp1 = ControlPanel(ctl1Frame, VALVE1, GPIO_VALVE1)
         ctl1Frame.grid(row=1, column=0)
 
-        cp2 = ControlPanel(ctl2Frame, GPIO_VALVE2)
+        cp2 = ControlPanel(ctl2Frame, VALVE2, GPIO_VALVE2)
         ctl2Frame.grid(row=1, column=1)
 
-        cp3 = ControlPanel(ctl3Frame, GPIO_VALVE3)
+        cp3 = ControlPanel(ctl3Frame, VALVE3, GPIO_VALVE3)
         ctl3Frame.grid(row=1, column=2)
 
         pwr = PowerPanel(pwrFrame, [cp1, cp2, cp3], GPIO_PWR)
@@ -72,15 +76,16 @@ class PowerPanel:
             ctl.toggleStatus(False)
 
 class ControlPanel:
-    def __init__(self, master, gpio):
-        self.statusBool = False
+    def __init__(self, master, valve, gpio):
         self.master = master
+        self.statusBool = False
+        self.valve = valve
         self.label = gpio
         self.gpio = gpio
         self.frame = Frame(self.master)
 
         # Label
-        self.text = Label(self.frame, text = gpio)
+        self.text = Label(self.frame, text = '{}({})'.format(valve, gpio))
         self.text.grid(row=0, column=0, pady=10)
 
         # Status
