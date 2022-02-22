@@ -14,22 +14,26 @@ GPIO_3 = 26
 class MainApp(Frame):
     def __init__(self, master):
         self.master = master
-        self.frame1 = Frame(self.master)
-        self.frame2 = Frame(self.master)
-        self.frame3 = Frame(self.master)
+        self.ctl1 = Frame(self.master)
+        self.ctl2 = Frame(self.master)
+        self.ctl3 = Frame(self.master)
         self.frame4 = Frame(self.master)
 
         self.pwr = PowerPanel(self.frame4)
         self.frame4.grid(row=0, column=1)
 
-        self.cp1 = ControlPanel(self.frame1, GPIO_1)
-        self.frame1.grid(row=1, column=0, padx=20)
+        self.cp1 = ControlPanel(self.ctl1, GPIO_1)
+        self.ctl1.grid(row=1, column=0)
 
-        self.cp2 = ControlPanel(self.frame2, GPIO_2)
-        self.frame2.grid(row=1, column=1, padx=80)
+        self.cp2 = ControlPanel(self.ctl2, GPIO_2)
+        self.ctl2.grid(row=1, column=1)
 
-        self.cp3 = ControlPanel(self.frame3, GPIO_3)
-        self.frame3.grid(row=1, column=2, padx=20)
+        self.cp3 = ControlPanel(self.ctl3, GPIO_3)
+        self.ctl3.grid(row=1, column=2)
+
+        master.columnconfigure(0, weight=1)
+        master.columnconfigure(1, weight=1)
+        master.columnconfigure(2, weight=1)
 
 class PowerPanel:
     def __init__(self, master):
@@ -39,15 +43,15 @@ class PowerPanel:
 
         # Label
         self.text = Label(self.frame, text = "Pump Power")
-        self.text.grid(row=0, column=0, pady=10)
+        self.text.grid(row=0, column=0)
 
         # Toggle Button
         self.button = Button(self.frame, text = "Toggle", command=self.toggleStatus)
-        self.button.grid(row=1, column=0, pady=10)
+        self.button.grid(row=1, column=0)
 
         # Status
         self.status = Label(self.frame, bg="red", width=10)
-        self.status.grid(row=2, column=0, pady=20)
+        self.status.grid(row=2, column=0)
 
         self.frame.pack()
 
@@ -67,15 +71,15 @@ class ControlPanel:
 
         # Label
         self.text = Label(self.frame, text = gpio)
-        self.text.grid(row=0, column=0, pady=10)
+        self.text.grid(row=0, column=0)
 
         # Toggle Button
         self.button = Button(self.frame, text = "Toggle", command=self.toggleStatus)
-        self.button.grid(row=1, column=0, pady=10)
+        self.button.grid(row=1, column=0)
 
         # Status
         self.status = Label(self.frame, bg="red", width=10)
-        self.status.grid(row=2, column=0, pady=20)
+        self.status.grid(row=2, column=0)
 
         self.frame.pack()
     
