@@ -2,14 +2,16 @@ from tkinter import *
 from turtle import width
 # import RPi.GPIO as GPIO
 
-GPIO_1 = 20
-GPIO_2 = 21
-GPIO_3 = 26
+GPIO_VALVE1 = 20
+GPIO_VALVE2 = 21
+GPIO_VALVE3 = 26
+GPIO_PWR = 18
 
 # GPIO.setmode(GPIO.BCM)
 # GPIO.setup(GPIO_1, GPIO.OUT)
 # GPIO.setup(GPIO_2, GPIO.OUT)
 # GPIO.setup(GPIO_3, GPIO.OUT)
+# GPIO.setup(GPIO_PWR, GPIO.OUT)
 
 class MainApp(Frame):
     def __init__(self, master):
@@ -19,16 +21,16 @@ class MainApp(Frame):
         ctl3Frame = Frame(self.master)
         pwrFrame = Frame(self.master)
 
-        cp1 = ControlPanel(ctl1Frame, GPIO_1)
+        cp1 = ControlPanel(ctl1Frame, GPIO_VALVE1)
         ctl1Frame.grid(row=1, column=0)
 
-        cp2 = ControlPanel(ctl2Frame, GPIO_2)
+        cp2 = ControlPanel(ctl2Frame, GPIO_VALVE2)
         ctl2Frame.grid(row=1, column=1)
 
-        cp3 = ControlPanel(ctl3Frame, GPIO_3)
+        cp3 = ControlPanel(ctl3Frame, GPIO_VALVE3)
         ctl3Frame.grid(row=1, column=2)
 
-        pwr = PowerPanel(pwrFrame, [cp1, cp2, cp3])
+        pwr = PowerPanel(pwrFrame, [cp1, cp2, cp3], GPIO_PWR)
         pwrFrame.grid(row=0, column=1, pady=20)
 
         master.columnconfigure(0, weight=1)
@@ -36,7 +38,8 @@ class MainApp(Frame):
         master.columnconfigure(2, weight=1)
 
 class PowerPanel:
-    def __init__(self, master, controlPanels):
+    def __init__(self, master, controlPanels, gpio):
+        self.gpio = gpio
         self.controlPanels = controlPanels
         self.statusBool = False
         self.master = master
