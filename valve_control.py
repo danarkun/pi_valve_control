@@ -14,29 +14,30 @@ GPIO_3 = 26
 class MainApp(Frame):
     def __init__(self, master):
         self.master = master
-        self.ctl1 = Frame(self.master)
-        self.ctl2 = Frame(self.master)
-        self.ctl3 = Frame(self.master)
-        self.frame4 = Frame(self.master)
+        ctl1Frame = Frame(self.master)
+        ctl2Frame = Frame(self.master)
+        ctl3Frame = Frame(self.master)
+        pwrFrame = Frame(self.master)
 
-        self.pwr = PowerPanel(self.frame4)
-        self.frame4.grid(row=0, column=1)
+        cp1 = ControlPanel(ctl1Frame, GPIO_1)
+        ctl1Frame.grid(row=1, column=0)
 
-        self.cp1 = ControlPanel(self.ctl1, GPIO_1)
-        self.ctl1.grid(row=1, column=0)
+        cp2 = ControlPanel(ctl2Frame, GPIO_2)
+        ctl2Frame.grid(row=1, column=1)
 
-        self.cp2 = ControlPanel(self.ctl2, GPIO_2)
-        self.ctl2.grid(row=1, column=1)
+        cp3 = ControlPanel(ctl3Frame, GPIO_3)
+        ctl3Frame.grid(row=1, column=2)
 
-        self.cp3 = ControlPanel(self.ctl3, GPIO_3)
-        self.ctl3.grid(row=1, column=2)
+        pwr = PowerPanel(pwrFrame, [cp1, cp2, cp3])
+        pwrFrame.grid(row=0, column=1)
 
         master.columnconfigure(0, weight=1)
         master.columnconfigure(1, weight=1)
         master.columnconfigure(2, weight=1)
 
 class PowerPanel:
-    def __init__(self, master):
+    def __init__(self, master, controlPanels):
+        self.controlPanels = controlPanels
         self.statusBool = False
         self.master = master
         self.frame = Frame(self.master)
@@ -59,7 +60,11 @@ class PowerPanel:
         self.statusBool = not self.statusBool
         self.status.config(bg= "green" if self.statusBool else "red")
         # GPIO.output(self.gpio, self.statusBool)
-        print(f'GPIO{self.gpio} is: {self.statusBool}')
+        print(f'Power is: {self.statusBool}')
+
+        # Foreach control panel, disable toggle button depending on power
+        for ctl in self.controlPanels:
+            ctl.button.configure(state="active" if self.statusBool else "disabled")
 
 class ControlPanel:
     def __init__(self, master, gpio):
@@ -74,7 +79,7 @@ class ControlPanel:
         self.text.grid(row=0, column=0)
 
         # Toggle Button
-        self.button = Button(self.frame, text = "Toggle", command=self.toggleStatus)
+        self.button = Button(self.frame, text = "Toggle", command=self.toggleStatus, state="disabled")
         self.button.grid(row=1, column=0)
 
         # Status
