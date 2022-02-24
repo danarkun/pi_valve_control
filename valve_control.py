@@ -110,6 +110,16 @@ def main():
     gui.title("Valve Control")
     # set window size
     gui.geometry("480x320")
+
+    def toggle_fs(dummy=None):
+        state = False if gui.attributes('-fullscreen') else True
+        gui.attributes('-fullscreen', state)
+        if not state:
+            gui.geometry('480x320+100+100')
+
+    gui.attributes('-fullscreen', True)
+    gui.bind('<Escape>', toggle_fs)
+
     gui.mainloop()
 
 if __name__ == "__main__":
