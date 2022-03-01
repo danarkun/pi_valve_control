@@ -1,21 +1,29 @@
 from tkinter import *
 from turtle import width
-# import RPi.GPIO as GPIO
+import signal, os
+import RPi.GPIO as GPIO
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 
 VALVE1 = "VALVE 1"
 VALVE2 = "VALVE 1"
 VALVE3 = "VALVE 3"
 
-GPIO_VALVE1 = 20
-GPIO_VALVE2 = 21
-GPIO_VALVE3 = 26
+GPIO_VALVE1 = 26
+GPIO_VALVE2 = 20
+GPIO_VALVE3 = 21
 GPIO_PWR = 18
 
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setup(GPIO_1, GPIO.OUT)
-# GPIO.setup(GPIO_2, GPIO.OUT)
-# GPIO.setup(GPIO_3, GPIO.OUT)
-# GPIO.setup(GPIO_PWR, GPIO.OUT)
+GPIO.setup(GPIO_VALVE1, GPIO.OUT)
+GPIO.setup(GPIO_VALVE2, GPIO.OUT)
+GPIO.setup(GPIO_VALVE3, GPIO.OUT)
+GPIO.setup(GPIO_PWR, GPIO.OUT)
+
+GPIO.output(GPIO_VALVE1, False)
+GPIO.output(GPIO_VALVE2, False)
+GPIO.output(GPIO_VALVE3, False)
+GPIO.output(GPIO_PWR, False)
 
 class MainApp(Frame):
     def __init__(self, master):
@@ -66,7 +74,7 @@ class PowerPanel:
     def toggleStatus(self):
         self.statusBool = not self.statusBool
         self.status.config(bg= "green" if self.statusBool else "red")
-        # GPIO.output(self.gpio, self.statusBool)
+        GPIO.output(self.gpio, self.statusBool)
         print(f'Power is: {self.statusBool}')
 
         # Foreach control panel, disable toggle button depending on power
@@ -101,7 +109,7 @@ class ControlPanel:
     def toggleStatus(self, newStatus):
         self.statusBool = newStatus
         self.status.config(bg= "green" if self.statusBool else "red")
-        # GPIO.output(self.gpio, self.statusBool)
+        GPIO.output(self.gpio, self.statusBool)
         print(f'GPIO{self.gpio} is: {self.statusBool}')
 
 def main():
@@ -121,6 +129,20 @@ def main():
     gui.bind('<Escape>', toggle_fs)
 
     gui.mainloop()
+    
+def signal_handler(signal_num, frame):
+    print(f"Got Signal {signal_num}!")
+    GPIO.output(GPIO_VALVE1, False)
+    GPIO.output(GPIO_VALVE2, False)
+    GPIO.output(GPIO_VALVE3, False)
+    GPIO.output(GPIO_PWR, False)
 
 if __name__ == "__main__":
+    # INTERRUPT (2) Works !
+    signal.signal(signal.SIGINT, handler=signal_handler)
+    # TERM (15) Works !
+    signal.signal(signal.SIGTERM, handler=signal_handler)
+    # QUIT (3) Doesn't Works !
+    signal.signal(signal.SIGQUIT, handler=signal_handler)
+    
     main()
